@@ -2,7 +2,8 @@ import os
 import random
 
 from story import  main_story
-from normal import call_channl_user
+from normal import call_channl_user as call_user
+from normal import instruction_help as call_help
 
 import discord
 from dotenv import load_dotenv
@@ -42,19 +43,22 @@ async def on_message(message):
         return
 
     if '!呼叫:' in message.content.lower():
-        await message.channel.send(call_channl_user(client, GUILD, message))
+        await message.channel.send(call_user(client, GUILD, message))
 
     if '!故事前述' == message.content.lower():
         before_story = main_story()
         await message.channel.send(before_story)
 
-    if '!help' == message.content.lower():
-        pass
+    if message.content.startswith('!help'):
+        take_help = call_help()
+
+        for call in take_help:
+            await message.channel.send(call)
 
 
 
     ## 範例：當有會員說出生日快樂 機器人會說生日快樂
-    if 'happy birthday' in message.content.lower():
+    if message.content.startswith('!happy birthday'):
         if message.author == client.user:
             return
         await message.channel.send('Happy Birthday! 🎈🎉')
